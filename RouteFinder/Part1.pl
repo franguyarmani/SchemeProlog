@@ -13,4 +13,3 @@ edge('E','D',3).
 connected(X,Y,L) :- edge(X,Y,L) ; edge(Y,X,L).
 
 path(A,B,L,Path) :-
-    tr
