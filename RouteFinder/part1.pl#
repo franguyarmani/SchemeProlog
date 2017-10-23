@@ -9,9 +9,12 @@ edge('C','G',12).
 edge('G','F',800).
 edge('F','E',400).
 edge('E','D',300).
+noBus('A','E','F').
 
 
 connected(X,Y,L) :- edge(X,Y,L) ; edge(Y,X,L).
+
+
 
 travel(Node1,Node2,Len,Path,[Node2|Path]) :-
     connected(Node1,Node2,Len).
@@ -52,6 +55,25 @@ pathAll(StartNode,EndNode,Length,Path) :-
     member('G',Q),
     reverse(Q,Path).
 
+planePossible(Point1,Point2,L):-
+    connected(Point1,Point2,L),
+    L>=400.
+busPossible(Point1,Point2,L):-
+    connected(Point1,Point2,L),
+    \+member(Point1, nobus).
+
+    
+
+time(Point1, Point2, plane, Time):-
+    planePossible(Point1,Point2,L),
+    Time is L/500.
+time(Point1,Point2,bus,Time):-
+    busPossible(Point1,Point2,L),
+    Time is L/80.
+time(Point1,Point2,b,Time):-
+    busPossible(Point1,Point2,L),
+    Time is L/80.
+
 
 shortestPath(StartNode,EndNode,Length,Path):-
     setof([Path,Length], path(StartNode,EndNode,Length, Path), Set),
@@ -70,8 +92,8 @@ shortestPath(StartNode, WayPoint1,WayPoint2,WayPoint3,EndNode, Path, Length):-
     Set = [_|_],
     shortest(Set,[Path,Length]).
 
-shortestPathAll(StartNode,EndNode,Length,Path):-
-    setof([Path,Length], pathAll(StartNode,EndNode,Length, Path), Set),
+shortestPathAll(StartNode,Length,Path):-
+    setof([Path,Length], pathAll(StartNode,StartNode,Length, Path), Set),
     Set = [_|_],
     shortest(Set,[Path,Length]).
 
