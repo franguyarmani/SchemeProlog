@@ -116,6 +116,17 @@ shortestPathAll(StartNode,Length,Path):-
     setof([Path,Length], pathAll(StartNode,Length,Path), Set),
     Set = [_|_],
     minimal(Set,[Path,Length]).
+%Satisfies Scenerio 3
+shortestPathTwoWay(StartNode,WayPoint,Length,Path):-
+    setof([Path,Length], path(StartNode,WayPoint,Length,Path), Set),
+    Set = [_|_],
+    minimal(Set,[P,L]),
+    Length is L*2,
+    reverse(P,Pth),
+    Path = P+Pth.
+
+
+
 
 timedPath(StartNode,EndNode,Time,Path,Traveled):-
     path(StartNode,EndNode,Path),
@@ -140,9 +151,9 @@ budgetPath(StartNode,EndNode,Cost,Path,Traveled):-
 
 timedBudgetPathAll(StartNode,Budget,Time,Cost,Path,Traveled):-
     pathAll(StartNode,_,Path),
+    findStats(Path,Time,Cost,[],Travel),
     Cost =< Budget,
     !,
-    findStats(Path,Time,Cost,[],Travel),
     reverse(Travel,Traveled).
 
 fastestPath(StartNode,EndNode,Time,Path,Traveled):-
@@ -204,4 +215,39 @@ min([_,M],[[P,L]|R],Min) :-
 
 min(M,[_|R],Min) :-
     min(M,R,Min).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

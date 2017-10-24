@@ -117,6 +117,17 @@ shortestPathAll(StartNode,Length,Path):-
     Set = [_|_],
     minimal(Set,[Path,Length]).
 
+shortestPathTwoWay(StartNode,WayPoint,Length,Path):-
+    setof([Path,Length], path(StartNode,WayPoint,Length,Path), Set),
+    Set = [_|_],
+    minimal(Set,[P,L]),
+    Length is L*2,
+    reverse(P,Pth),
+    Path = P+Pth.
+
+
+
+
 timedPath(StartNode,EndNode,Time,Path,Traveled):-
     path(StartNode,EndNode,Path),
     findStats(Path,Time,_,[],Travel),
@@ -140,9 +151,9 @@ budgetPath(StartNode,EndNode,Cost,Path,Traveled):-
 
 timedBudgetPathAll(StartNode,Budget,Time,Cost,Path,Traveled):-
     pathAll(StartNode,_,Path),
+    findStats(Path,Time,Cost,[],Travel),
     Cost =< Budget,
     !,
-    findStats(Path,Time,Cost,[],Travel),
     reverse(Travel,Traveled).
 
 fastestPath(StartNode,EndNode,Time,Path,Traveled):-
